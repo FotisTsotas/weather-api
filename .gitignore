@@ -17,3 +17,6 @@ server
 # IDE
 .vscode/
 .idea/
+
+# Air live-reload build output
+tmp/

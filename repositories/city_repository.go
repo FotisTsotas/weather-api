@@ -5,8 +5,10 @@ import (
 )
 
 type City struct {
-	ID   int
-	Name string
+	ID        int
+	Name      string
+	Latitude  float64
+	Longitude float64
 }
 
 type CityRepository struct {
@@ -18,7 +20,7 @@ func NewCityRepository(db *sql.DB) *CityRepository {
 }
 
 func (r *CityRepository) GetCities() ([]City, error) {
-	rows, err := r.db.Query("SELECT id, name FROM cities")
+	rows, err := r.db.Query("SELECT id, name, latitude, longitude FROM cities")
 	if err != nil {
 		return nil, err
 	}
@@ -27,7 +29,7 @@ func (r *CityRepository) GetCities() ([]City, error) {
 	var cities []City
 	for rows.Next() {
 		var city City
-		if err := rows.Scan(&city.ID, &city.Name); err != nil {
+		if err := rows.Scan(&city.ID, &city.Name, &city.Latitude, &city.Longitude); err != nil {
 			return nil, err
 		}
 		cities = append(cities, city)
@@ -39,9 +41,9 @@ func (r *CityRepository) GetCities() ([]City, error) {
 }
 
 func (r *CityRepository) GetCityByID(id int) (*City, error) {
-	row := r.db.QueryRow("SELECT id, name FROM cities WHERE id = ?", id)
+	row := r.db.QueryRow("SELECT id, name, latitude, longitude FROM cities WHERE id = ?", id)
 	var city City
-	if err := row.Scan(&city.ID, &city.Name); err != nil {
+	if err := row.Scan(&city.ID, &city.Name, &city.Latitude, &city.Longitude); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
 		}
@@ -50,8 +52,8 @@ func (r *CityRepository) GetCityByID(id int) (*City, error) {
 	return &city, nil
 }
 
-func (r *CityRepository) CreateCity(name string) (*City, error) {
-	result, err := r.db.Exec("INSERT INTO cities (name) VALUES (?)", name)
+func (r *CityRepository) CreateCity(name string, latitude, longitude float64) (*City, error) {
+	result, err := r.db.Exec("INSERT INTO cities (name, latitude, longitude) VALUES (?, ?, ?)", name, latitude, longitude)
 	if err != nil {
 		return nil, err
 	}
@@ -59,15 +61,15 @@ func (r *CityRepository) CreateCity(name string) (*City, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &City{ID: int(id), Name: name}, nil
+	return &City{ID: int(id), Name: name, Latitude: latitude, Longitude: longitude}, nil
 }
 
-func (r *CityRepository) UpdateCity(id int, name string) (*City, error) {
-	_, err := r.db.Exec("UPDATE cities SET name = ? WHERE id = ?", name, id)
+func (r *CityRepository) UpdateCity(id int, name string, latitude, longitude float64) (*City, error) {
+	_, err := r.db.Exec("UPDATE cities SET name = ?, latitude = ?, longitude = ? WHERE id = ?", name, latitude, longitude, id)
 	if err != nil {
 		return nil, err
 	}
-	return &City{ID: id, Name: name}, nil
+	return &City{ID: id, Name: name, Latitude: latitude, Longitude: longitude}, nil
 }
 
 func (r *CityRepository) DeleteCity(id int) error {
@@ -77,4 +79,3 @@ func (r *CityRepository) DeleteCity(id int) error {
 	}
 	return nil
 }
-

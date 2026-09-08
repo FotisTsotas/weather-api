@@ -32,16 +32,16 @@ func (s *CityService) GetCityByID(id int) (*repositories.City, error) {
 	return city, nil
 }
 
-func (s *CityService) CreateCity(name string) (*repositories.City, error) {
-	city, err := s.repo.CreateCity(name)
+func (s *CityService) CreateCity(name string, latitude, longitude float64) (*repositories.City, error) {
+	city, err := s.repo.CreateCity(name, latitude, longitude)
 	if err != nil {
 		return nil, err
 	}
 	return city, nil
 }
 
-func (s *CityService) UpdateCity(id int, name string) (*repositories.City, error) {
-	city, err := s.repo.UpdateCity(id, name)
+func (s *CityService) UpdateCity(id int, name string, latitude, longitude float64) (*repositories.City, error) {
+	city, err := s.repo.UpdateCity(id, name, latitude, longitude)
 	if err != nil {
 		return nil, err
 	}

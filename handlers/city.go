@@ -46,14 +46,16 @@ func (h *CityHandler) GetCityByID(c *gin.Context) {
 
 func (h *CityHandler) CreateCity(c *gin.Context) {
 	var request struct {
-		Name string `json:"name"`
+		Name      string  `json:"name" binding:"required"`
+		Latitude  float64 `json:"latitude" binding:"required"`
+		Longitude float64 `json:"longitude" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(400, gin.H{"error": "Invalid request"})
 		return
 	}
 
-	city, err := h.service.CreateCity(request.Name)
+	city, err := h.service.CreateCity(request.Name, request.Latitude, request.Longitude)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Failed to create city"})
 		return
@@ -70,14 +72,16 @@ func (h *CityHandler) UpdateCity(c *gin.Context) {
 	}
 
 	var request struct {
-		Name string `json:"name"`
+		Name      string  `json:"name" binding:"required"`
+		Latitude  float64 `json:"latitude" binding:"required"`
+		Longitude float64 `json:"longitude" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(400, gin.H{"error": "Invalid request"})
 		return
 	}
 
-	city, err := h.service.UpdateCity(id, request.Name)
+	city, err := h.service.UpdateCity(id, request.Name, request.Latitude, request.Longitude)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Failed to update city"})
 		return

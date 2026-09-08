@@ -14,7 +14,7 @@ GET http://localhost:8085/cities
 Content-Type: application/json
 Authorization: Bearer {{login.response.body.$.token}}
 
-GET http://localhost:8085/cities/2
+GET http://localhost:8085/cities/1
 Content-Type: application/json
 Authorization: Bearer {{login.response.body.$.token}}
 
@@ -24,7 +24,9 @@ Content-Type: application/json
 Authorization: Bearer {{login.response.body.$.token}}
 
 {
-  "name": "New City"
+  "name": "New City",
+    "latitude": 12.345678,
+  "longitude": 98.7654321
 }
 
 ### Update City
@@ -33,7 +35,9 @@ Content-Type: application/json
 Authorization: Bearer {{login.response.body.$.token}}
 
 {
-  "name": "Updated City"
+  "name": "Updated City",
+  "latitude": 12.345678,
+  "longitude": 98.7654321
 }
 
 ### Delete City

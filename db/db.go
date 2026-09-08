@@ -14,7 +14,7 @@ import (
 var DB *sql.DB
 
 func InitDB(cfg config.Config) {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true",
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true&clientFoundRows=true",
 		cfg.DBUser,
 		cfg.DBPassword,
 		cfg.DBHost,

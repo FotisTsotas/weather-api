@@ -7,9 +7,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterRoutes(server *gin.Engine, userHandler *handlers.UserHandler) {
-	server.POST("/signup", userHandler.Signup)
-	server.POST("/login", userHandler.Login)
+func AuthRoutes(server *gin.Engine, h *handlers.UserHandler) {
+	server.POST("/signup", h.Signup)
+	server.POST("/login", h.Login)
 
 	authenticated := server.Group("/")
 	authenticated.Use(middlewares.Authenticate)

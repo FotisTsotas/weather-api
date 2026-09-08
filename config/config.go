@@ -15,6 +15,7 @@ type Config struct {
 	DBMaxOpenConns int
 	DBMaxIdleConns int
 	JWTSecret      string
+	Environment    string
 }
 
 func Load() Config {
@@ -28,6 +29,7 @@ func Load() Config {
 		DBMaxOpenConns: getEnvOrDefaultInt("DB_MAX_OPEN_CONNS", 10),
 		DBMaxIdleConns: getEnvOrDefaultInt("DB_MAX_IDLE_CONNS", 5),
 		JWTSecret:      getEnvOrDefault("JWT_SECRET", "your-secret-key"),
+		Environment:    getEnvOrDefault("ENVIRONMENT", "development"),
 	}
 }
 

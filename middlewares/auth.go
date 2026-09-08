@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"net/http"
+	"strings"
 
 	"weather-api/utils"
 
@@ -15,6 +16,7 @@ func Authenticate(context *gin.Context) {
 		context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Authorization token required"})
 		return
 	}
+	token = strings.TrimPrefix(token, "Bearer ")
 
 	user, err := utils.VerifyToken(token)
 	if err != nil {

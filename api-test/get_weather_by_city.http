@@ -1,0 +1,38 @@
+### Login
+# @name login
+POST http://localhost:8085/login
+Content-Type: application/json
+
+{
+  "email": "testuser@example.com",
+  "password": "password123"
+}
+
+
+### Get Weather by City
+GET http://localhost:8085/weather/1
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.token}}
+
+### Create Weather
+POST http://localhost:8085/weather
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.token}}
+
+{
+  "city_id": 1,
+  "condition": "Sunny",
+  "temperature_c": 25.0
+}
+
+
+### Updated Weather
+PUT http://localhost:8085/weather/1
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.token}}
+
+{
+  "city_id": 1,
+  "condition": "Sunny",
+  "temperature_c": 22.0
+}

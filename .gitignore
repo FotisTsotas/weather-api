@@ -20,3 +20,6 @@ server
 
 # Air live-reload build output
 tmp/
+
+# Application logs
+logs/

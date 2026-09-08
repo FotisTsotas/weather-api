@@ -36,3 +36,8 @@ Authorization: Bearer {{login.response.body.$.token}}
   "condition": "Sunny",
   "temperature_c": 22.0
 }
+
+### Delete Weather
+DELETE http://localhost:8085/weather/1
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.token}}

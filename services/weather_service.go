@@ -24,3 +24,7 @@ func (s *WeatherService) CreateWeather(cityID int, condition string, temperature
 func (s *WeatherService) UpdateWeather(cityID int, newCityID int, condition string, temperatureC float64) (*models.Weather, error) {
 	return s.weatherRepo.Update(cityID, newCityID, condition, temperatureC)
 }
+
+func (s *WeatherService) DeleteWeather(cityID int) error {
+	return s.weatherRepo.Delete(cityID)
+}

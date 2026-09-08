@@ -70,3 +70,21 @@ func (r *WeatherRepository) Update(cityID int, newCityID int, condition string, 
 		Condition:    condition,
 	}, nil
 }
+
+func (r *WeatherRepository) Delete(cityID int) error {
+	result, err := r.db.Exec("DELETE FROM weathers WHERE city_id = ?", cityID)
+	if err != nil {
+		slog.Error("Failed to delete weather", "err", err)
+		return err
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		slog.Error("Failed to get rows affected", "err", err)
+		return err
+	}
+	if rowsAffected == 0 {
+		slog.Error("City not found", "city_id", cityID)
+		return ErrCityNotFound
+	}
+	return nil
+}

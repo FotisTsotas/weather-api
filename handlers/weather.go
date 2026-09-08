@@ -98,3 +98,25 @@ func (h *WeatherHandler) UpdateWeather(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, weather)
 }
+
+func (h *WeatherHandler) DeleteWeather(c *gin.Context) {
+	city_id := c.Param("city_id")
+
+	cityID, err := strconv.Atoi(city_id)
+	if err != nil {
+		slog.Error("Invalid city ID", "err", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid city ID"})
+		return
+	}
+
+	err = h.weatherService.DeleteWeather(cityID)
+	if err != nil {
+		if errors.Is(err, repositories.ErrCityNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "City not found"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not delete weather"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Weather deleted successfully"})
+}

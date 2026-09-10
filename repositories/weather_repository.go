@@ -2,9 +2,9 @@ package repositories
 
 import (
 	"database/sql"
-	"encoding/json"
 	"errors"
 	"log/slog"
+	"time"
 	"weather-api/models"
 )
 
@@ -90,27 +90,10 @@ func (r *WeatherRepository) Delete(cityID int) error {
 	return nil
 }
 
-type openMeteoResponse struct {
-	CurrentWeather struct {
-		Temperature float64 `json:"temperature"`
-		WeatherCode int     `json:"weathercode"`
-	} `json:"current_weather"`
-}
-
-func (r *WeatherRepository) SaveWeatherData(cityID int, data []byte) error {
-	var response openMeteoResponse
-	if err := json.Unmarshal(data, &response); err != nil {
-		slog.Error("Failed to parse weather data", "city_id", cityID, "err", err)
-		return err
-	}
-
-	condition := weatherCodeToCondition(response.CurrentWeather.WeatherCode)
-	temperature := response.CurrentWeather.Temperature
-
+func (r *WeatherRepository) SaveWeatherData(cityID int, condition string, temperature float64) error {
 	_, err := r.FindByCity(cityID)
 	if err != nil {
 		if errors.Is(err, ErrCityNotFound) {
-			slog.Info("Creating new weather entry for city", "city_id", cityID)
 			_, err = r.Create(cityID, condition, temperature)
 			return err
 		}
@@ -120,4 +103,26 @@ func (r *WeatherRepository) SaveWeatherData(cityID int, data []byte) error {
 	_, err = r.Update(cityID, cityID, condition, temperature)
 
 	return err
+}
+
+func (r *WeatherRepository) SaveWeatherHistory(cityID int, temperature float64, humidity float64, windSpeed float64) (*models.WeatherHistory, error) {
+	_, err := r.FindByCity(cityID)
+	if err != nil {
+		slog.Error("City not found", "city_id", cityID, "err", err)
+		return nil, err
+	}
+
+	_, err = r.db.Exec("INSERT INTO weather_histories (city_id, temperature, humidity, wind_speed) VALUES (?, ?, ?, ?)", cityID, temperature, humidity, windSpeed)
+	if err != nil {
+		slog.Error("Failed to save weather history", "err", err)
+		return nil, err
+	}
+
+	return &models.WeatherHistory{
+		CityID:      cityID,
+		Temperature: temperature,
+		Humidity:    humidity,
+		WindSpeed:   windSpeed,
+		RecordedAt:  time.Now(),
+	}, nil
 }

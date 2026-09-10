@@ -10,7 +10,7 @@ func GetJobs() []Job {
 	return []Job{
 		{
 			Name:     "Weather Update",
-			Schedule: EveryFifteenMinutes(),
+			Schedule: EveryMinute(),
 			Task: func() {
 				HandleWeatherDataRetrieval()
 			},

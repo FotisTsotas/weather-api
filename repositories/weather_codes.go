@@ -33,7 +33,7 @@ var weatherCodes = map[int]string{
 	99: "Thunderstorm with heavy hail",
 }
 
-func weatherCodeToCondition(code int) string {
+func WeatherCodeToCondition(code int) string {
 	if condition, ok := weatherCodes[code]; ok {
 		return condition
 	}

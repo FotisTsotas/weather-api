@@ -20,7 +20,7 @@ func NewWeatherClient() *WeatherClient {
 }
 
 func (c *WeatherClient) GetWeatherData(city repositories.City) ([]byte, error) {
-	url := fmt.Sprintf("%s?latitude=%f&longitude=%f&current_weather=true", baseURL, city.Latitude, city.Longitude)
+	url := fmt.Sprintf("%s?latitude=%f&longitude=%f&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weathercode", baseURL, city.Latitude, city.Longitude)
 
 	resp, err := c.httpClient.Get(url)
 	if err != nil {
